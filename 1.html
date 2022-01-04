@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<input type="type" name="" id="input" data-max="10" />
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    function getCursortPosition(obj) {
+        var cursorIndex = 0;
+        if (document.selection) {
+            // IE Support
+            obj.focus();
+            var range = document.selection.createRange();
+            range.moveStart("character", -obj.value.length);
+            cursorIndex = range.text.length;
+        } else if (obj.selectionStart || obj.selectionStart == 0) {
+            // another support
+            cursorIndex = obj.selectionStart;
+        }
+        return cursorIndex;
+    }
+    let flag = true; //设定全局变量在输入中文过程中不执行赋值操作
+    $("#input")
+        .on("input", function(e) {
+            setMaxlen(this);
+        })
+        .on("compositionupdate", function() {
+            flag = false;
+        })
+        .on("compositionend", function() {
+            flag = true;
+            setMaxlen(this);
+        });
+    /**
+     * @param  {object} el DOM元素
+     */
+    function setMaxlen(el) {
+        let val = $(el).val(), //获取value
+            maxLen = $(el).data("max"), //获取限制输入的最大值
+            len = val.replace(/[^\x00-\xff]/g, "**").length, //获取input长度
+            startLen = getCursortPosition(el), //获取光标位置
+            endLen = val.substring(startLen).replace(/[^\x00-\xff]/g, "**").length; //光标后面有几个字符(计算后的)
+        if (flag && len > maxLen) {
+            let num = maxLen - endLen,//求出光标前面剩余的字符长度
+                str = val.substring(0, maxLen - endLen);//截取长度
+            while (str.replace(/[^\x00-\xff]/g, "**").length > num) {//因涉及中文,循环截取
+                if (str.length === 0) {
+                    str = "";
+                    break;
+                }
+                str = str.substring(0, str.length - 1);
+            }
+            $(el).val(str + val.substring(startLen));//设置value
+            //设置完value后需要重新设置下光标的位置。
+            let newStrLen = $(el).val().length,//获取设置完value后的长度
+                setEnd = val.substring(startLen).length;//获取原input光标后有几个字符
+            el.setSelectionRange(newStrLen - setEnd, newStrLen - setEnd);//设置光标位置
+        }
+    }
+</script>
+</body>
+</html>

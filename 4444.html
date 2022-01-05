@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div contenteditable="true" id="textarea">defedfe</div>
+<input type="text" maxlength="10">
+<script>
+   const textarea = document.querySelector('#textarea')
+    // 开关,是否是复合输入
+    let isComposition = false;
+    // 可以输入的最大长度
+    const maxLength = 10;
+
+    // 长度验证规格
+    function maxLengthRule(value){
+        // 获取输入内容的长度边界
+        const limit = value.length <= maxLength;
+
+        // 如果长度超出了最大长度
+        if(!limit){
+            const resVal = value.substring(0,maxLength);
+            textarea.innerHTML  = resVal;
+            textarea.blur()
+            console.log('得到长度范围内的输入内容');
+        }
+    }
+
+    // 复合输入开始
+    textarea.addEventListener('compositionstart',(e) => {
+        isComposition = true;
+    })
+
+    // 复合输入结束
+    textarea.addEventListener('compositionend',(e) => {
+        if(isComposition){
+            maxLengthRule(textarea.innerHTML )
+        }
+
+        isComposition = false;
+    })
+
+    // 非复合输入
+    textarea.addEventListener('input',(e) => {
+        if(!isComposition){
+            const value = e.target.innerHTML ;
+            maxLengthRule(value);
+        }
+    })
+
+</script>
+</body>
+</html>

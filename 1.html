@@ -30,7 +30,8 @@
         .on("input", function(e) {
             setMaxlen(this);
         })
-        .on("compositionupdate", function() {
+        .on("compositionupdate", function(e) {
+            console.log(e,'eee')
             flag = false;
         })
         .on("compositionend", function() {

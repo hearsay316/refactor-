@@ -8,6 +8,20 @@
 <div contenteditable="true" id="textarea">defedfe</div>
 <input type="text" maxlength="10">
 <script>
+    function getCursortPosition(obj) {
+        var cursorIndex = 0;
+        if (document.selection) {
+            // IE Support
+            obj.focus();
+            var range = document.selection.createRange();
+            range.moveStart("character", -obj.value.length);
+            cursorIndex = range.text.length;
+        } else if (obj.selectionStart || obj.selectionStart == 0) {
+            // another support
+            cursorIndex = obj.selectionStart;
+        }
+        return cursorIndex;
+    }
    const textarea = document.querySelector('#textarea')
     // 开关,是否是复合输入
     let isComposition = false;
@@ -23,7 +37,7 @@
         if(!limit){
             const resVal = value.substring(0,maxLength);
             textarea.innerHTML  = resVal;
-            textarea.blur()
+            textarea.setSelectionRange(8, 8);
             console.log('得到长度范围内的输入内容');
         }
     }
@@ -47,6 +61,7 @@
         if(!isComposition){
             const value = e.target.innerHTML ;
             maxLengthRule(value);
+            getCursortPosition(e.target)
         }
     })
 

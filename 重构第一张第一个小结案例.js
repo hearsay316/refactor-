@@ -33,12 +33,12 @@ function statement (invoice, plays) {
         result += ` ${playFor(perf).name}: ${format(amountFor(perf)/100)} (${perf.audience} seats)\n`;
         totalAmount += amountFor(perf);
     }
-    let volumeCredits = 0;
-    for (let perf  of invoice.performances) {
-        volumeCredits += volumeCreditsFor(perf);
-    }
+    // let volumeCredits = 0;
+    // for (let perf  of invoice.performances) {
+    //     volumeCredits += volumeCreditsFor(perf);
+    // }
     result += `Amount owed is ${format(totalAmount/100)}\n`;
-    result += `You earned ${volumeCredits} credits\n`;
+    result += `You earned ${totalVolumeCredits()} credits\n`;
     return result;
 }
 
@@ -85,4 +85,11 @@ function format(aNumber) {
     return new Intl.NumberFormat("en-US",
         { style: "currency", currency: "USD",
             minimumFractionDigits: 2 }).format(aNumber);
+}
+function totalVolumeCredits(){
+    let volumeCredits = 0;
+    for (let perf of invoices[0].performances) {
+        volumeCredits=volumeCreditsFor(perf)
+    }
+    return volumeCredits
 }

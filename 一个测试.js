@@ -5,13 +5,13 @@ const getDatas = (list = [], max_api_num = 6, apiPromises = [], max = 100) => {
     })
     function get_promises_data(apiPromises_length, max_api_num, apiPromises) {
         if (apiPromises_length === 0) {
-            let promises = Array.from({length: max_api_num}, (v, k) => k).map(item => getData)
+            let promises =  getArrayPromise(max_api_num)
             return {
                 promises, error_promises: []
             }
         }
         if (apiPromises_length > 0 && apiPromises_length < max_api_num) {
-            let promises = [...Array.from({length: max_api_num - apiPromises_length}, (v, k) => k).map(item => getData), ...apiPromises];
+            let promises = [...getArrayPromise(max_api_num - apiPromises_length), ...apiPromises];
             return {
                 promises, error_promises: []
             }
@@ -29,6 +29,9 @@ const getDatas = (list = [], max_api_num = 6, apiPromises = [], max = 100) => {
                 promises, error_promises
             }
         }
+    }
+    function getArrayPromise(length){
+      return   Array.from({length: length}, (v, k) => k).map(item => getData)
     }
     function getData() {
         return new Promise((resolve, reject) => {
@@ -79,5 +82,5 @@ const getDatas = (list = [], max_api_num = 6, apiPromises = [], max = 100) => {
     }
 };
 getDatas().then(res => {
-    console.log(res, 'ss')
+    console.log(res.length, 'res.length')
 })

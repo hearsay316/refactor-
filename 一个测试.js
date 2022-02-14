@@ -31,12 +31,12 @@ const getDatas = (list = [], max_api_num = 6, apiPromises = [], max = 100) => {
         }
     }
     function getArrayPromise(length){
-      return   Array.from({length: length}, (v, k) => k).map(item => getData)
+      return   Array.from({length: length}, () => getData)
     }
     function getData() {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-                var ok = Math.random() > 0.5  // 模拟请求成功或失败
+                const ok = Math.random() > 0.5  // 模拟请求成功或失败
                 let data = []
                 if (ok) {
                     data = [
@@ -82,5 +82,5 @@ const getDatas = (list = [], max_api_num = 6, apiPromises = [], max = 100) => {
     }
 };
 getDatas().then(res => {
-    console.log(res.length, 'res.length')
+    console.log(res, 'res.length')
 })
